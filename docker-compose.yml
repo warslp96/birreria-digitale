@@ -1,0 +1,49 @@
+services:
+  # 1. DATABASE
+  db:
+    image: postgres:15-alpine
+    container_name: birreria-db
+    environment:
+      POSTGRES_USER: birra_user
+      POSTGRES_PASSWORD: birra_password
+      POSTGRES_DB: birreria_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - birreria-network
+
+  # 2. BACKEND (Spring Boot)
+  backend:
+    build: ./birreria-backend
+    container_name: birreria-backend
+    ports:
+      - "8080:8080"
+    environment:
+      # Sostituiamo localhost con il nome del servizio "db" di Docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/birreria_db
+      - SPRING_DATASOURCE_USERNAME=birra_user
+      - SPRING_DATASOURCE_PASSWORD=birra_password
+    depends_on:
+      - db
+    networks:
+      - birreria-network
+
+  # 3. FRONTEND (Angular)
+  frontend:
+    build: ./birreria-frontend
+    container_name: birreria-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - birreria-network
+
+volumes:
+  postgres_data:
+
+networks:
+  birreria-network:
+    driver: bridge

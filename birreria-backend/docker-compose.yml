@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: birreria-db
+    environment:
+      POSTGRES_USER: birra_user
+      POSTGRES_PASSWORD: birra_password
+      POSTGRES_DB: birreria_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:

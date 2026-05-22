@@ -1,0 +1,76 @@
+<div style="padding: 20px; font-family: sans-serif;">
+  <h1>🍻 Menu Birreria Digitale di Giulio</h1>
+  
+  <table border="1" cellpadding="10" style="border-collapse: collapse; width: 100%; text-align: left;">
+    <thead style="background-color: #f2f2f2;">
+      <tr>
+        <th>Nome</th>
+        <th>Stile</th>
+        <th>Gradazione</th>
+        <th>Prezzo</th>
+        <th>Disponibilità</th>
+      </tr>
+    </thead>
+  <tbody>
+  <!-- Aggiungi le parentesi () dopo elencoBirre -->
+  @for (birra of elencoBirre(); track birra.id) {
+    <tr>
+      <td><strong>{{ birra.nome }}</strong></td>
+      <td>{{ birra.stile }}</td>
+      <td>{{ birra.gradazione }}%</td>
+      <td>{{ birra.prezzo | currency:'EUR':'symbol' }}</td>
+      <td>
+        <span [style.color]="birra.quantitaDisponibile > 0 ? 'green' : 'red'">
+          {{ birra.quantitaDisponibile }} pz
+        </span>
+      </td>
+      <td>
+        <button (click)="ordina(birra)" [disabled]="birra.quantitaDisponibile <= 0">
+          {{ birra.quantitaDisponibile > 0 ? '🍺 Ordina' : 'Esaurita' }}
+        </button>
+      </td>
+    </tr>
+  } @empty {
+    <tr>
+      <td colspan="6" style="text-align: center; color: gray;">Menu in caricamento...</td>
+    </tr>
+  }
+</tbody>
+  </table>
+</div>
+<hr style="margin-top: 40px;">
+
+<div style="margin-top: 20px; background-color: #f9f9f9; padding: 20px; border-radius: 8px; max-width: 400px;">
+  <h3>➕ Aggiungi una nuova Birra</h3>
+  
+  <form (ngSubmit)="aggiungiBirra()">
+    <div style="margin-bottom: 10px;">
+      <label>Nome:</label><br>
+      <input type="text" [(ngModel)]="nuovaBirra.nome" name="nome" required style="width: 100%;">
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+      <label>Stile:</label><br>
+      <input type="text" [(ngModel)]="nuovaBirra.stile" name="stile" required style="width: 100%;">
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+      <label>Gradazione (%):</label><br>
+      <input type="number" step="0.1" [(ngModel)]="nuovaBirra.gradazione" name="gradazione" style="width: 100%;">
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+      <label>Prezzo (€):</label><br>
+      <input type="number" step="0.01" [(ngModel)]="nuovaBirra.prezzo" name="prezzo" style="width: 100%;">
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+      <label>Quantità in Magazzino:</label><br>
+      <input type="number" [(ngModel)]="nuovaBirra.quantitaDisponibile" name="quantita" style="width: 100%;">
+    </div>
+    
+    <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 10px 15px; cursor: pointer; width: 100%; border-radius: 4px; font-weight: bold;">
+      Salva Birra
+    </button>
+  </form>
+</div>
